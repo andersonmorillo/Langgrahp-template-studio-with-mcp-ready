@@ -1,6 +1,6 @@
 # LangGraph Template Studio with MCP Server
 
-This project combines a LangGraph ReAct Agent template with a Model Control Protocol (MCP) server, containerized using Docker for easy deployment and development.
+This project combines a LangGraph ReAct Agent template with a Model Control Protocol (MCP) server for development and deployment.
 
 ## Overview
 
@@ -11,20 +11,18 @@ The project consists of two main components:
 
 ## Features
 
-- Dockerized setup for easy deployment
 - ReAct agent with reasoning and action capabilities
 - MCP server integration
-- Hot-reload support for development
 - Environment variable configuration
-- Network isolation between services
+- Comprehensive testing suite
+- Static file serving capabilities
 
 ## Prerequisites
 
-- Docker and Docker Compose
-- Python 3.11 or higher (for local development)
+- Python 3.11 or higher
 - API keys for:
   - Tavily (for search capabilities)
-  - Google gemini or Anthropic (for language models)
+  - Google Gemini or Anthropic (for language models)
 
 ## Quick Start
 
@@ -37,13 +35,26 @@ cd Langgrahp-template-studio-with-mcp-ready
 2. Create a `.env` file with your API keys:
 ```bash
 TAVILY_API_KEY=your_tavily_api_key
-GOOGLE_API_KEY=your_openai_api_key
+GOOGLE_API_KEY=your_google_api_key
 ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
-3. Start the services using Docker Compose:
+3. Set up and run the services:
 ```bash
-docker-compose up --build
+# Set up Python virtual environment
+python -m venv env
+source env/bin/activate  # On Windows: env\Scripts\activate
+
+# Install dependencies
+cd app
+pip install -e .
+
+# Run the services
+# Terminal 1 - MCP Server
+python mcp_server/server.py
+
+# Terminal 2 - LangGraph App
+langgraph run
 ```
 
 The services will be available at:
@@ -56,13 +67,15 @@ The services will be available at:
 .
 ├── app/                    # LangGraph application
 │   ├── src/               # Source code
+│   ├── static/            # Static files
+│   ├── tests/             # Test suite
 │   ├── pyproject.toml     # Python dependencies
-│   └── ...
+│   ├── Makefile          # Build and development commands
+│   └── langgraph.json    # LangGraph configuration
 ├── mcp_server/            # MCP server implementation
-│   └── server.py          # MCP server code
-├── Dockerfile             # Docker configuration
-├── docker-compose.yml     # Docker Compose configuration
-└── README.md             # This file
+│   └── server.py         # MCP server code
+├── env/                   # Python virtual environment
+└── README.md            # This file
 ```
 
 ## Development
@@ -90,23 +103,19 @@ python mcp_server/server.py
 langgraph run
 ```
 
-### Docker Development
-
-The Docker setup includes hot-reload capabilities for both services. Changes to the code will be automatically reflected in the running containers.
-
 ## Configuration
 
 ### Environment Variables
 
 - `TAVILY_API_KEY`: Required for search capabilities
-- `OPENAI_API_KEY`: Required if using OpenAI models
+- `GOOGLE_API_KEY`: Required if using Google Gemini models
 - `ANTHROPIC_API_KEY`: Required if using Anthropic models
 
 ### Model Selection
 
 The default model is Anthropic's Claude 3 Sonnet. You can change this in the configuration to use other compatible models:
 
-- OpenAI models (e.g., `openai/gpt-4-turbo-preview`)
+- Google Gemini models (e.g., `google/gemini-pro`)
 - Anthropic models (e.g., `anthropic/claude-3-sonnet-20240229`)
 
 ## Customization
@@ -114,6 +123,16 @@ The default model is Anthropic's Claude 3 Sonnet. You can change this in the con
 1. **Adding Tools**: Extend the agent's capabilities by adding new tools in `app/src/react_agent/tools.py`
 2. **Customizing Prompts**: Modify the system prompts in `app/src/react_agent/prompts.py`
 3. **Adjusting the Graph**: Modify the agent's reasoning process in `app/src/react_agent/graph.py`
+4. **Static Files**: Add static assets in the `app/static` directory
+
+## Testing
+
+The project includes a comprehensive test suite. Run tests using:
+
+```bash
+cd app
+make test
+```
 
 ## Contributing
 
