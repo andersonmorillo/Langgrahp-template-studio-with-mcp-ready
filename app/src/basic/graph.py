@@ -36,7 +36,7 @@ async def graph():
             # },
             "search": {
                 # make sure you start your weather server on port 8000
-                "url": "http://mcp_server:8001/mcp",
+                "url": "http://localhost:8001/mcp",
                 "transport": "streamable_http",
             }
         }
